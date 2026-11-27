@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- 公開準備ができたら次の1行を削除すると、検索に表示されるようになります -->
+<meta name="robots" content="noindex">
+<title>AIで、仕事をもっとシンプルに。</title>
+<meta name="description" content="現場に合った、ちょうどいい自動化を。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#4da3ff;--ink:#eef4ff;--serif:"Shippori Mincho","Noto Serif JP","Yu Mincho",serif;--sans:"Zen Kaku Gothic New","Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#030712;color:var(--ink);font-family:var(--sans);line-height:1.8;overflow-x:hidden}
+#stage{position:fixed;left:0;top:0;width:100%;height:100vh;height:100lvh;z-index:0;display:block}
+.grain{position:fixed;inset:-60px;z-index:3;pointer-events:none;opacity:.07}
+main{position:relative;z-index:2}
+h1,h2,.big{font-family:var(--serif);font-weight:800;letter-spacing:.04em;line-height:1.45;text-wrap:balance}
+.p{display:inline-block}
+.label{font-size:.85rem;font-weight:700;letter-spacing:.2em;color:var(--blue);margin-bottom:1.2rem}
+section{position:relative}
+.pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+.shade{text-shadow:0 2px 24px rgba(0,0,0,.95),0 0 60px rgba(0,0,0,.8)}
+
+#hero{height:230vh}
+#hero h1{font-size:clamp(2rem,6.4vw,5.2rem)}
+#hero p{margin-top:1.6rem;font-size:clamp(1rem,2vw,1.4rem);letter-spacing:.12em}
+.hint{position:absolute;bottom:28px;left:50%;width:1px;height:56px;background:linear-gradient(transparent,var(--blue));animation:drop 2.4s ease-in-out infinite}
+@keyframes drop{0%{transform:translateY(-10px);opacity:0}50%{opacity:1}100%{transform:translateY(14px);opacity:0}}
+
+#problems{height:380vh}
+#problems .label{position:absolute;top:12svh}
+.stack{display:grid;width:100%;max-width:900px}
+.stack>*{grid-area:1/1;align-self:center;font-size:clamp(1.6rem,4.4vw,3.2rem)}
+.count{position:absolute;bottom:12svh;display:flex;gap:10px}
+.count i{width:34px;height:2px;background:rgba(255,255,255,.2)}
+.count i.on{background:var(--blue);box-shadow:0 0 12px var(--blue)}
+
+#turn{height:300vh}
+#turn h2{font-size:clamp(1.9rem,5.4vw,4.2rem)}
+
+#services{height:380vh}
+#services .pin{padding:24px 0;align-items:flex-start}
+#services .label{padding-left:8vw}
+.track{display:flex;gap:6vw;padding:0 20vw;will-change:transform}
+.panel{flex:0 0 60vw;max-width:760px;min-height:48vh;display:flex;flex-direction:column;justify-content:flex-end;text-align:left;padding:clamp(24px,4vw,56px);border:1px solid rgba(110,180,255,.35);border-radius:6px;background:linear-gradient(160deg,rgba(18,48,100,.82),rgba(4,12,30,.9));box-shadow:0 0 60px rgba(50,130,255,.22),inset 0 1px 0 rgba(255,255,255,.12)}
+.panel h2{font-size:clamp(1.5rem,3.4vw,2.8rem)}
+.panel p{margin-top:.8rem;color:#b9d3f5;font-size:1.1rem}
+.panel svg{width:clamp(80px,12vw,150px);margin-bottom:auto;stroke:var(--blue);fill:none;stroke-width:1.5;filter:drop-shadow(0 0 8px var(--blue))}
+
+#process{height:360vh}
+.steps{list-style:none;position:relative;text-align:left;height:min(62svh,520px);display:flex;flex-direction:column;justify-content:space-between;width:min(320px,80vw)}
+.steps::before,.beam{content:"";position:absolute;left:11px;top:16px;bottom:16px;width:2px;background:rgba(255,255,255,.12)}
+.beam{background:linear-gradient(#2c6fd6,#a9d4ff);box-shadow:0 0 16px var(--blue);transform-origin:top}
+.steps li{position:relative;z-index:1;display:flex;align-items:center;gap:28px;font-family:var(--serif);font-weight:600;font-size:clamp(1.3rem,3vw,2rem);opacity:.28;transition:opacity .5s,transform .5s}
+.steps li::before{content:"";width:24px;height:24px;border-radius:50%;background:#07142b;border:2px solid #41597f;transition:.5s}
+.steps li.on{opacity:1;transform:translateX(8px)}
+.steps li.on::before{background:#dcefff;border-color:var(--blue);box-shadow:0 0 24px 6px rgba(77,163,255,.7)}
+
+#belief{height:220vh}
+#belief h2{font-size:clamp(1.8rem,5vw,3.8rem)}
+#belief p.body{margin-top:2.4rem;font-size:clamp(1rem,1.8vw,1.25rem);max-width:44em}
+
+#profile{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px}
+.card{max-width:620px;border-top:1px solid rgba(255,255,255,.3);border-bottom:1px solid rgba(255,255,255,.3);padding:48px 8px;background:radial-gradient(closest-side,rgba(3,10,26,.75),transparent)}
+.card h2{font-size:2rem;margin-bottom:1rem}
+
+#finale{height:300vh;color:#0b1b36}
+#finale h2{font-size:clamp(1.7rem,4.6vw,3.4rem);transform:translateY(-3svh)}
+#cta{margin-top:5svh;font:700 1.2rem var(--sans);letter-spacing:.12em;color:#fff;background:#0b3f8f;border:0;border-radius:999px;padding:22px 64px;cursor:pointer;text-decoration:none;box-shadow:0 12px 44px rgba(11,63,143,.45);transition:transform .25s,box-shadow .25s}
+#cta:hover{transform:translateY(-3px);box-shadow:0 18px 54px rgba(11,63,143,.6)}
+#cta:focus-visible{outline:3px solid #0b1b36;outline-offset:4px}
+#note{min-height:2em;margin-top:1rem;font-size:.9rem}
+
+.js .fx{opacity:0;will-change:opacity,transform}
+
+@media (max-width:760px){
+  #services{height:auto}
+  #services .pin{position:static;height:auto;overflow:visible;padding:100px 20px;align-items:stretch}
+  #services .label{padding-left:0;text-align:center}
+  .track{flex-direction:column;padding:0;gap:28px;transform:none!important}
+  .panel{flex:none;min-height:300px}
+  .panel svg{margin-bottom:32px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hint,.grain{display:none}
+  .steps li{transition:none}
+}
+</style>
+</head>
+<body>
+<canvas id="stage" aria-hidden="true"></canvas>
+<canvas class="grain" aria-hidden="true"></canvas>
+<main>
+  <section id="hero">
+    <div class="pin shade">
+      <div class="fx" id="heroText">
+        <h1><span class="p">AIで、</span><span class="p">仕事をもっと</span><span class="p">シンプルに。</span></h1>
+        <p><span class="p">現場に合った、</span><span class="p">ちょうどいい自動化を。</span></p>
+      </div>
+      <span class="hint" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <section id="problems">
+    <div class="pin shade">
+      <p class="label">こんなお悩みはありませんか</p>
+      <div class="stack">
+        <h2 class="fx"><span class="p">同じ入力作業を</span><span class="p">何度もくり返している</span></h2>
+        <h2 class="fx"><span class="p">AIを使いたいが、</span><span class="p">何から始めればいいか</span><span class="p">分からない</span></h2>
+        <h2 class="fx"><span class="p">大きなシステムを</span><span class="p">入れるほどではない</span></h2>
+      </div>
+      <div class="count" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+  </section>
+
+  <section id="turn">
+    <div class="pin shade">
+      <h2 class="fx"><span class="p">その作業、</span><span class="p">整理できる</span><span class="p">かもしれません。</span></h2>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="pin">
+      <p class="label">できること</p>
+      <div class="track">
+        <article class="panel">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M22 42a29 29 0 0 1 52-10M76 16v18H58M78 58a29 29 0 0 1-52 10M24 84V66h18"/></svg>
+          <h2>業務の自動化</h2><p>（転記、集計、書類作成）</p>
+        </article>
+        <article class="panel">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="12" y="20" width="76" height="60" rx="4"/><path d="M12 34h76M34 48 24 57l10 9M66 48l10 9-10 9M55 45 45 70"/></svg>
+          <h2><span class="p">小さな業務ツールの</span><span class="p">開発</span></h2>
+        </article>
+        <article class="panel">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M12 18h56v40H36L22 70V58H12zM74 36h14v38H78v12L64 74H44v-8"/></svg>
+          <h2><span class="p">AI活用の相談と</span><span class="p">サポート</span></h2>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="pin shade">
+      <p class="label">進め方</p>
+      <ol class="steps">
+        <span class="beam" aria-hidden="true"></span>
+        <li>現状を聞く</li><li>候補を選ぶ</li><li>小さく試す</li><li>実際に使う</li><li>改善する</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="belief">
+    <div class="pin shade">
+      <div class="fx" id="beliefText">
+        <p class="label">大切にしていること</p>
+        <h2><span class="p">作らなくていいものは、</span><span class="p">作りません。</span></h2>
+        <p class="body"><span class="p">今あるツールで足りるなら、</span><span class="p">それを使います。</span><br><span class="p">人が判断すべきところは、</span><span class="p">人に残します。</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="profile">
+    <div class="card shade">
+      <p class="label">プロフィール</p>
+      <h2>東江裕貴</h2>
+      <p>電気関係の会社員。エンジニア出身ではありませんが、AIを使って身近な業務の改善に取り組んでいます。</p>
+    </div>
+  </section>
+
+  <section id="finale">
+    <div class="pin">
+      <div class="fx" id="finalText">
+        <h2><span class="p">まずは、</span><span class="p">困っている作業を</span><span class="p">教えてください。</span></h2>
+        <button id="cta" type="button">相談してみる</button>
+        <p id="note" role="status"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  // お問い合わせフォームのURLをここに入れると、ボタンから開けます
+  const CONTACT_URL = "";
+
+  document.documentElement.classList.add("js");
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const clamp = v => v < 0 ? 0 : v > 1 ? 1 : v;
+  const ramp = (a, b, v) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
+  const mix = (a, b, t) => a + (b - a) * t;
+
+  $("#cta").addEventListener("click", () => {
+    if (CONTACT_URL) location.href = CONTACT_URL;
+    else $("#note").textContent = "お問い合わせ窓口は準備中です。";
+  });
+
+  // フィルムの粒子（点滅しないよう静止）
+  const grain = $(".grain");
+  grain.width = grain.height = 256;
+  {
+    const g = grain.getContext("2d"), d = g.createImageData(256, 256);
+    for (let i = 0; i < d.data.length; i += 4) {
+      d.data[i] = d.data[i+1] = d.data[i+2] = Math.random() * 255; d.data[i+3] = 255;
+    }
+    g.putImageData(d, 0, 0);
+    grain.style.imageRendering = "pixelated";
+    grain.style.width = grain.style.height = "calc(100% + 120px)";
+  }
+
+  const cv = $("#stage"), ctx = cv.getContext("2d");
+  let W, H, mobile, cards = [];
+
+  // 書類・表・メッセージのカード画像を先に作る
+  function sprite(kind) {
+    const c = document.createElement("canvas"); c.width = 160; c.height = 200;
+    const g = c.getContext("2d");
+    g.fillStyle = "rgba(150,190,245,.16)"; g.strokeStyle = "rgba(170,210,255,.75)"; g.lineWidth = 2;
+    g.beginPath(); g.rect(10, 10, 140, 180); g.fill(); g.stroke();
+    g.fillStyle = "rgba(205,228,255,.75)";
+    g.fillRect(26, 28, 66, 9);
+    if (kind === 0) for (let i = 0; i < 8; i++) g.fillRect(26, 56 + i * 15, i % 3 === 2 ? 70 : 108, 4);
+    if (kind === 1) {
+      g.strokeStyle = "rgba(190,220,255,.6)"; g.lineWidth = 1.5;
+      for (let i = 0; i <= 6; i++) { g.beginPath(); g.moveTo(26, 56 + i * 19); g.lineTo(134, 56 + i * 19); g.stroke(); }
+      for (let i = 0; i <= 3; i++) { g.beginPath(); g.moveTo(26 + i * 36, 56); g.lineTo(26 + i * 36, 170); g.stroke(); }
+    }
+    if (kind === 2) for (let i = 0; i < 3; i++) {
+      g.globalAlpha = .55; g.fillRect(i % 2 ? 54 : 26, 58 + i * 40, 80, 28); g.globalAlpha = 1;
+    }
+    return c;
+  }
+  // ぼかし版（縮小して拡大することで、どのブラウザでも同じ見え方に）
+  function soften(src, w) {
+    const s = document.createElement("canvas"); s.width = w; s.height = w * 1.25;
+    s.getContext("2d").drawImage(src, 0, 0, s.width, s.height);
+    const b = document.createElement("canvas"); b.width = 80; b.height = 100;
+    b.getContext("2d").drawImage(s, 0, 0, 80, 100);
+    return b;
+  }
+  const sharp = [0,1,2].map(sprite), blur = sharp.map(s => soften(s, 20));
+
+  function build() {
+    const n = mobile ? 48 : 130, cols = mobile ? 6 : 13;
+    const rows = Math.ceil(n / cols);
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    cards = Array.from({length: n}, (_, i) => ({
+      k: i % 3,
+      x: rnd() * 2 - 1, y: rnd() * 2 - 1, z: rnd(),
+      r: (rnd() - .5) * 1.6, s: rnd() * 6.28, f: .4 + rnd() * .8,
+      gx: (i % cols) / (cols - 1) - .5, gy: Math.floor(i / cols) / (rows - 1) - .5,
+      cols, rows
+    }));
+  }
+
+  function resize() {
+    const d = Math.min(devicePixelRatio || 1, mobile ? 1.25 : 1.6);
+    const w = innerWidth, h = cv.clientHeight, m = w <= 760;
+    const changed = m !== mobile || !cards.length;
+    mobile = m; W = w; H = h;
+    const dd = Math.min(devicePixelRatio || 1, m ? 1.25 : 1.6);
+    cv.width = W * dd; cv.height = H * dd; ctx.setTransform(dd, 0, 0, dd, 0, 0);
+    if (changed) build();
+  }
+
+  const el = {
+    hero: $("#hero"), problems: $("#problems"), turn: $("#turn"), services: $("#services"),
+    process: $("#process"), belief: $("#belief"), profile: $("#profile"), finale: $("#finale")
+  };
+  const probs = $$("#problems h2"), dots = $$(".count i"), steps = $$(".steps li");
+  const track = $(".track"); const cta = $("#cta");
+
+  // 区間内の進み具合（0〜1）と、画面に入ってくる度合い
+  function read() {
+    const vh = innerHeight, o = {};
+    for (const k in el) {
+      const r = el[k].getBoundingClientRect();
+      o[k] = { p: clamp(-r.top / Math.max(1, r.height - vh)), in: clamp((vh - r.top) / vh) };
+    }
+    return o;
+  }
+  function show(node, a, y = 0, extra = "") {
+    node.style.opacity = a;
+    node.style.transform = `translateY(${reduce ? 0 : y}px) ${extra}`;
+    node.style.visibility = a < .01 ? "hidden" : "visible";
+  }
+
+  let intro = reduce ? 1 : 0, mx = 0, my = 0, tx = 0, ty = 0, start = null;
+  addEventListener("pointermove", e => { tx = e.clientX / innerWidth - .5; ty = e.clientY / innerHeight - .5; }, {passive: true});
+
+  // 背景色：夜 → 青 → 朝
+  const night = [[3,7,18],[2,4,10]], electric = [[7,30,72],[2,8,24]], dusk = [[16,32,66],[5,10,24]], morning = [[214,233,255],[255,224,186]];
+  const blend = (a, b, t) => a.map((c, i) => c.map((v, j) => mix(v, b[i][j], t)));
+  const rgb = (c, a = 1) => `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+
+  function frame(now) {
+    if (start === null) start = now;
+    const t = reduce ? 0 : (now - start) / 1000;
+    if (!reduce) intro = ramp(.2, 2.6, t);
+    mx += (tx - mx) * .04; my += (ty - my) * .04;
+    const s = read();
+
+    /* 文字の演出 */
+    const hp = s.hero.p;
+    const ha = intro * (1 - ramp(.55, .9, hp));
+    show($("#heroText"), ha, -hp * 80, `scale(${1 + (reduce ? 0 : hp * .12)})`);
+    $("#heroText").style.filter = intro < .99 ? `blur(${(1 - intro) * 16}px)` : "none";
+
+    const pp = s.problems.p * 3;
+    probs.forEach((n, i) => {
+      const l = pp - i;
+      const a = ramp(0, .28, l) * (1 - ramp(.76, 1, l));
+      show(n, a, (0.5 - l) * 50, `scale(${reduce ? 1 : .94 + clamp(l) * .1})`);
+    });
+    dots.forEach((d, i) => d.classList.toggle("on", i === Math.min(2, Math.floor(pp))));
+
+    const tp = s.turn.p;
+    show($("#turn h2"), ramp(.42, .68, tp) * (1 - ramp(.9, 1, tp)), (1 - ramp(.42, .68, tp)) * 40);
+
+    if (!mobile) {
+      const dist = track.scrollWidth - innerWidth;
+      track.style.transform = `translateX(${-dist * ramp(.08, .92, s.services.p)}px)`;
+    }
+
+    const q = ramp(.05, .85, s.process.p);
+    $(".beam").style.transform = `scaleY(${q})`;
+    steps.forEach((n, i) => n.classList.toggle("on", s.process.p > .03 && q >= i / 4 - .02));
+
+    const bp = s.belief.p;
+    show($("#beliefText"), ramp(0, .25, bp) * (1 - ramp(.82, 1, bp)), (1 - ramp(0, .25, bp)) * 30);
+
+    const fp = s.finale.p;
+    show($("#finalText"), ramp(.58, .82, fp), (1 - ramp(.58, .82, fp)) * 40);
+
+    /* 背景 */
+    const beamT = ramp(.08, .62, tp);
+    let col = blend(night, electric, beamT);
+    col = blend(col, night, ramp(.4, 1, s.belief.in));
+    col = blend(col, dusk, ramp(0, 1, s.profile.in));
+    const sun = ramp(0, .6, s.finale.in * .35 + fp * .75);
+    col = blend(col, morning, sun);
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, rgb(col[0])); bg.addColorStop(1, rgb(col[1]));
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+    if (sun > 0) {
+      const sy = H * (1.15 - ramp(0, .8, fp) * .5), R = Math.max(W, H) * .75;
+      const g = ctx.createRadialGradient(W / 2, sy, 0, W / 2, sy, R);
+      g.addColorStop(0, `rgba(255,252,235,${sun})`); g.addColorStop(.2, `rgba(255,205,130,${sun * .7})`); g.addColorStop(1, "rgba(255,190,120,0)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    }
+
+    /* カード */
+    const order = s.turn.in >= 1 ? beamT : 0;       // 整列の度合い
+    const merge = ramp(.08, .68, fp);               // 最後に1つへ
+    // 各場面でのカードの濃さ
+    let vis = 1;
+    vis *= 1 - .45 * ramp(0, 1, s.problems.in) * (1 - ramp(0, .3, tp));
+    vis *= 1 - .75 * ramp(.2, 1, s.services.in);
+    vis *= 1 - .5 * ramp(.3, 1, s.belief.in);
+    vis = mix(vis, .85, ramp(.2, 1, s.finale.in));
+    vis *= 1 - ramp(.62, .78, fp);
+
+    const camera = hp * .35 + ramp(0, 1, s.problems.p) * 1.1;  // カメラの前進
+    const unit = Math.min(W, H);
+    const list = cards.map(c => {
+      let z = ((c.z - camera - t * .008) % 1 + 1) % 1;
+      const depth = .28 + z * 1.5, f = 1 / depth;
+      let x = W / 2 + (c.x * W * .55 + Math.sin(t * .25 * c.f + c.s) * 24) * f - mx * 60 * f;
+      let y = H / 2 + (c.y * H * .5 + Math.cos(t * .2 * c.f + c.s) * 24) * f - my * 40 * f;
+      let w = unit * (mobile ? .12 : .085) * f;
+      let rot = c.r + Math.sin(t * .15 + c.s) * .3, flip = .45 + .55 * Math.abs(Math.cos(t * .2 * c.f + c.s));
+      let a = ramp(0, .12, z) * (1 - z * .55);
+      let soft = z < .12 || z > .68;
+      // 光が通った列から順に整列する
+      const o = ramp(c.gx + .5 - .25, c.gx + .5 + .25, order * 1.5 - .25);
+      if (o > 0) {
+        const gw = W * (mobile ? .86 : .82), gh = H * .78;
+        x = mix(x, W / 2 + c.gx * gw, o); y = mix(y, H / 2 + c.gy * gh, o);
+        w = mix(w, Math.min(gw / c.cols, gh / c.rows / 1.25) * .95, o);
+        rot = mix(rot, 0, o); flip = mix(flip, 1, o); a = mix(a, .55, o);
+        if (o > .5) soft = false;
+      }
+      if (merge > 0) {
+        const b = cta.getBoundingClientRect(), by = b.top + b.height / 2, swirl = Math.sin(merge * Math.PI);
+        x = mix(x, W / 2, merge) + Math.cos(c.s + merge * 4) * swirl * W * .12;
+        y = mix(y, by, merge) + Math.sin(c.s + merge * 4) * swirl * H * .1;
+        w *= 1 - merge * .45; rot += swirl * c.r;
+      }
+      return {x, y, w, rot, flip, a: a * vis * (.35 + .65 * intro), soft, k: c.k, z};
+    }).sort((a, b) => b.z - a.z);
+
+    for (const c of list) {
+      if (c.a < .02) continue;
+      ctx.save();
+      ctx.globalAlpha = c.a; ctx.translate(c.x, c.y); ctx.rotate(c.rot); ctx.scale(c.flip, 1);
+      if (sun > .35) { ctx.fillStyle = "rgba(11,63,143,.38)"; ctx.fillRect(-c.w * .44, -c.w * .56, c.w * .88, c.w * 1.12); }
+      ctx.drawImage((c.soft ? blur : sharp)[c.k], -c.w / 2, -c.w * .625, c.w, c.w * 1.25);
+      ctx.restore();
+    }
+
+    /* スポットライト */
+    const spot = ramp(.3, 1, s.problems.in) * (1 - ramp(0, .2, tp));
+    if (spot > 0) {
+      const cx = W / 2 + Math.sin(pp * 2.1) * W * .08;
+      const g = ctx.createRadialGradient(cx, H / 2, 0, cx, H / 2, Math.max(W, H) * .65);
+      g.addColorStop(0, `rgba(80,140,230,${spot * .2})`); g.addColorStop(.45, `rgba(0,0,0,${spot * .2})`); g.addColorStop(1, `rgba(0,0,0,${spot * .85})`);
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    }
+
+    /* 一筋の光 */
+    if (order > 0 && order < 1) {
+      const bx = mix(-W * .25, W * 1.25, order), a = Math.sin(order * Math.PI);
+      ctx.globalCompositeOperation = "lighter";
+      const g = ctx.createLinearGradient(bx - W * .22, 0, bx + W * .22, 0);
+      g.addColorStop(0, "rgba(30,110,255,0)"); g.addColorStop(.5, `rgba(60,150,255,${a * .5})`); g.addColorStop(1, "rgba(30,110,255,0)");
+      ctx.fillStyle = g; ctx.fillRect(bx - W * .22, 0, W * .44, H);
+      ctx.fillStyle = `rgba(215,238,255,${a * .85})`; ctx.fillRect(bx - 1.5, 0, 3, H);
+      ctx.globalCompositeOperation = "source-over";
+    }
+
+    /* 周辺を暗く */
+    const v = ctx.createRadialGradient(W / 2, H / 2, unit * .3, W / 2, H / 2, Math.max(W, H) * .8);
+    v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, `rgba(0,0,0,${.6 * (1 - sun)})`);
+    ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+
+    requestAnimationFrame(frame);
+  }
+
+  addEventListener("resize", resize);
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
